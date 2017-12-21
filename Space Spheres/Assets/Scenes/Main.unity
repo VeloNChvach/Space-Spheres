@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45143253, g: 0.5007261, b: 0.5712603, a: 1}
+  m_IndirectSpecularColor: {r: 0.45143282, g: 0.5007264, b: 0.571261, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -435,4 +435,14 @@ MonoBehaviour:
   spherePrefab: {fileID: 4505528599666126, guid: eda592e6b7523c14e859ec974f90ac22,
     type: 2}
   sphereContainer: {fileID: 732636067}
+  sphereMaterials:
+  - {fileID: 2100000, guid: 7c8a7fe671a025341a111badc1e519ad, type: 2}
+  - {fileID: 2100000, guid: eab8f85569bb67e44bb531afdc61b522, type: 2}
+  - {fileID: 2100000, guid: 48dbd99ae3a9d714eb986fd006564fd1, type: 2}
+  - {fileID: 2100000, guid: 83e43da1449230a4cbbf45dd9185077f, type: 2}
   colorContainer: {fileID: 488552163}
+  colorMaterials:
+  - {fileID: 2100000, guid: ec6f2c3222b993e46ab87222ce636279, type: 2}
+  - {fileID: 2100000, guid: fbd0ea3dfa1b42a4c90c8d6d934deff9, type: 2}
+  - {fileID: 2100000, guid: ea02cd0b3d9903c4ea023382c81a42c2, type: 2}
+  - {fileID: 2100000, guid: 261947e913644d94eb9cd575d9042a2e, type: 2}
