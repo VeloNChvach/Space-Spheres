@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class InputHandler : Singleton<InputHandler>
 {
-    public event Action MoveUp;
-    public event Action MoveDown;
-    public event Action MoveLeft;
-    public event Action MoveRight;
+    public event Action SwipeUp;
+    public event Action SwipeDown;
+    public event Action SwipeLeft;
+    public event Action SwipeRight;
     public event Action Tap;
 
     private Vector2 startTouchPosition = Vector2.zero;
@@ -46,12 +46,12 @@ public class InputHandler : Singleton<InputHandler>
             if (deltaDrag.x > 0)
             {
                 // Right
-                MoveRight.Invoke();
+                SwipeRight.Invoke();
             }
             else
             {
                 // Left
-                MoveLeft.Invoke();
+                SwipeLeft.Invoke();
             }
         }
         else
@@ -60,12 +60,12 @@ public class InputHandler : Singleton<InputHandler>
             if (deltaDrag.y > 0)
             {
                 // Up
-                MoveUp.Invoke();
+                SwipeUp.Invoke();
             }
             else
             {
                 // Down
-                MoveDown.Invoke();
+                SwipeDown.Invoke();
             }
         }
     }
