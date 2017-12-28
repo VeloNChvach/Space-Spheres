@@ -18,7 +18,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private Material[] colorMaterials;
 
     // Actions
-    public event Action<Transform, MoveSide, bool> SphereGo;
+    public event Action<Transform, MoveSide, bool, int> SphereGo;
     public event Action<MoveSide, bool> PlayerGo;
     public event Action<bool> ColorGo;
 
@@ -107,6 +107,11 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSeconds(timeToMove);
 
             PlayerGo.Invoke(playerMoveSide, playerSwap);
+
+            for (int i = 0; i < sphereList.Count; i++)
+            {
+                SphereGo.Invoke(sphereList[i], sphereMoveSide[i], sphereSwap[i], i);
+            }
         }
 
 
@@ -195,6 +200,7 @@ public class GameManager : Singleton<GameManager>
                 sphereColor.Add(Colors.Green);
             if (i == 3)
                 sphereColor.Add(Colors.Orange);
+            sphere.gameObject.AddComponent<SphereController>();
         }
     }
 
@@ -406,48 +412,52 @@ public class GameManager : Singleton<GameManager>
 
         for (int i = 0; i < spherePosOnGrid.Count; i++)
         {
-            if (i == mainIdx) // Don't touch current spheres in List
-                continue;
-
-            // Check to сollision avoidance
-            if (currentSphereMoveSide == MoveSide.Right && ((sphereMoveSide[i] == MoveSide.Up) || (sphereMoveSide[i] == MoveSide.Down)))
+            if (i != mainIdx) // Don't touch current spheres in List
             {
-                if (spherePosOnGrid[i].x - 2 == currentSpherePosOnGrid.x)
+                // Check to сollision avoidance
+                if (currentSphereMoveSide == MoveSide.Right && ((sphereMoveSide[i] == MoveSide.Up) || (sphereMoveSide[i] == MoveSide.Down)))
                 {
-                    if (spherePosOnGrid[i].y - 2 == currentSpherePosOnGrid.y || spherePosOnGrid[i].y + 2 == currentSpherePosOnGrid.y)
+                    if (spherePosOnGrid[i].x - 2 == currentSpherePosOnGrid.x)
                     {
-                        sphereMoveSide[i] = MoveSide.Left;
+                        if (spherePosOnGrid[i].y - 2 == currentSpherePosOnGrid.y || spherePosOnGrid[i].y + 2 == currentSpherePosOnGrid.y)
+                        {
+                            sphereMoveSide[i] = MoveSide.Left;
+                        }
+                    }
+                }
+                else if (currentSphereMoveSide == MoveSide.Left && ((sphereMoveSide[i] == MoveSide.Up) || (sphereMoveSide[i] == MoveSide.Down)))
+                {
+                    if (spherePosOnGrid[i].x + 2 == currentSpherePosOnGrid.x)
+                    {
+                        if (spherePosOnGrid[i].y - 2 == currentSpherePosOnGrid.y || spherePosOnGrid[i].y + 2 == currentSpherePosOnGrid.y)
+                        {
+                            sphereMoveSide[i] = MoveSide.Right;
+                        }
                     }
                 }
             }
-            else if (currentSphereMoveSide == MoveSide.Left && ((sphereMoveSide[i] == MoveSide.Up) || (sphereMoveSide[i] == MoveSide.Down)))
+
+            if (i == mainIdx)
             {
-                if (spherePosOnGrid[i].x + 2 == currentSpherePosOnGrid.x)
+                Debug.Log(currentSpherePosOnGrid + " " + density);
+                // Change side when sphere locate near bounds
+                if (currentSpherePosOnGrid.y == density.x - 2 && currentSphereMoveSide == MoveSide.Right)
                 {
-                    if (spherePosOnGrid[i].y - 2 == currentSpherePosOnGrid.y || spherePosOnGrid[i].y + 2 == currentSpherePosOnGrid.y)
-                    {
-                        sphereMoveSide[i] = MoveSide.Right;
-                    }
+                    sphereMoveSide[i] = MoveSide.Left;
                 }
-            }
+                else if (currentSpherePosOnGrid.y == 1 && currentSphereMoveSide == MoveSide.Left)
+                {
+                    sphereMoveSide[i] = MoveSide.Right;
+                }
 
-            // Change side when sphere locate near bounds
-            if (currentSpherePosOnGrid.y == density.x - 1 && currentSphereMoveSide == MoveSide.Right)
-            {
-                sphereMoveSide[i] = MoveSide.Left;
-            }
-            else if (currentSpherePosOnGrid.y == 0 && currentSphereMoveSide == MoveSide.Left)
-            {
-                sphereMoveSide[i] = MoveSide.Right;
-            }
-
-            if (currentSpherePosOnGrid.x == density.y - 1 && currentSphereMoveSide == MoveSide.Up)
-            {
-                sphereMoveSide[i] = MoveSide.Down;
-            }
-            else if (currentSpherePosOnGrid.x == 0 && currentSphereMoveSide == MoveSide.Down)
-            {
-                sphereMoveSide[i] = MoveSide.Up;
+                if (currentSpherePosOnGrid.x == density.y - 2 && currentSphereMoveSide == MoveSide.Up)
+                {
+                    sphereMoveSide[i] = MoveSide.Down;
+                }
+                else if (currentSpherePosOnGrid.x == 1 && currentSphereMoveSide == MoveSide.Down)
+                {
+                    sphereMoveSide[i] = MoveSide.Up;
+                }
             }
 
         }
