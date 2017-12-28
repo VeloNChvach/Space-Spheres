@@ -19,13 +19,14 @@ public class GameManager : Singleton<GameManager>
 
     // Actions
     public event Action<Transform, MoveSide, bool> SphereGo;
-    public event Action<MoveSide, bool, float> PlayerGo;
+    public event Action<MoveSide, bool> PlayerGo;
     public event Action<bool> ColorGo;
 
     // Path grid
     [HideInInspector] public Vector2[,] pathGrid;
     [HideInInspector] public Vector2 density;
     [HideInInspector] public List<Vector2> spherePosOnGrid;
+    [HideInInspector] public Vector2 playerPosOnGrid;
     [HideInInspector] public Vector2 stepBetweenGround;
 
     // Colors, ground
@@ -37,7 +38,6 @@ public class GameManager : Singleton<GameManager>
     private float heightGroundPrefab = 0.1f;
     // Player
     private Transform player;
-    private Vector2 playerPosOnGrid;
     private MoveSide playerMoveSide;
     private bool playerSwap;
     private Colors playerColor;
@@ -92,8 +92,8 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator PlayOneStep()
     {
-        int nStep = 6;
-        float timeToMove = 2f;
+        int nStep = 50;
+        float timeToMove = 0.7f;
         
         // Calculate moving for all spheres and player
         for (int j = 0; j < nStep; j++)
@@ -106,7 +106,7 @@ public class GameManager : Singleton<GameManager>
 
             yield return new WaitForSeconds(timeToMove);
 
-            PlayerGo.Invoke(playerMoveSide, playerSwap, timeToMove);
+            PlayerGo.Invoke(playerMoveSide, playerSwap);
         }
 
 
@@ -162,8 +162,8 @@ public class GameManager : Singleton<GameManager>
         sphereColor = new List<Colors>();
         sphereMoveSide = new List<MoveSide>();
 
-        //playerPosOnGrid = RandomPosition(density, ObjForRandom.Player);
-        playerPosOnGrid = Vector2.zero;
+        playerPosOnGrid = RandomPosition(density, ObjForRandom.Player);
+        //playerPosOnGrid = new Vector2(2, 2);
         player = Instantiate(spherePrefab, sphereContainer);
         player.position = new Vector3(pathGrid[
         (int)(playerPosOnGrid.x), (int)(playerPosOnGrid.y)].x,
@@ -171,7 +171,7 @@ public class GameManager : Singleton<GameManager>
         pathGrid[(int)(playerPosOnGrid.x), (int)(playerPosOnGrid.y)].y);
         MeshRenderer meshRendererPlayer = player.GetComponent<MeshRenderer>();
         meshRendererPlayer.material = sphereMaterials[0];
-        playerMoveSide = MoveSide.Up;
+        playerMoveSide = MoveSide.Down;
         playerColor = Colors.Blue;
         player.gameObject.AddComponent<PlayerController>();
 
@@ -313,24 +313,6 @@ public class GameManager : Singleton<GameManager>
         // Calculate for player and spheres
         for (int i = 0; i < spherePosOnGrid.Count; i++)
         {
-            if (playerPosOnGrid.x == density.x + 1)
-            {
-                playerMoveSide = MoveSide.Left;
-            }
-            else if (playerPosOnGrid.x == 0)
-            {
-                playerMoveSide = MoveSide.Right;
-            }
-
-            if (playerPosOnGrid.y == density.y + 1)
-            {
-                playerMoveSide = MoveSide.Down;
-            }
-            else if (playerPosOnGrid.y == 0)
-            {
-                playerMoveSide = MoveSide.Up;
-            }
-
             // Check to swap with player
             if (playerMoveSide == MoveSide.Right &&
                 sphereMoveSide[i] == MoveSide.Up &&
@@ -357,7 +339,7 @@ public class GameManager : Singleton<GameManager>
                 playerSwap = true;
             }
             else if (playerMoveSide == MoveSide.Left &&
-                sphereMoveSide[i] == MoveSide.Down &&
+                sphereMoveSide[i] == MoveSide.Up &&
                 spherePosOnGrid[i].x + 1 == playerPosOnGrid.x &&
                 spherePosOnGrid[i].y + 1 == playerPosOnGrid.y)
             {
@@ -368,6 +350,24 @@ public class GameManager : Singleton<GameManager>
             {
                 playerSwap = false;
                 sphereSwap[i] = false;
+            }
+
+            if (playerPosOnGrid.y == density.x - 1 && playerMoveSide == MoveSide.Right)
+            {
+                playerMoveSide = MoveSide.Left;
+            }
+            else if (playerPosOnGrid.y == 0 && playerMoveSide == MoveSide.Left)
+            {
+                playerMoveSide = MoveSide.Right;
+            }
+
+            if (playerPosOnGrid.x == density.y - 1 && playerMoveSide == MoveSide.Up)
+            {
+                playerMoveSide = MoveSide.Down;
+            }
+            else if (playerPosOnGrid.x == 0 && playerMoveSide == MoveSide.Down)
+            {
+                playerMoveSide = MoveSide.Up;
             }
         }
 
@@ -432,23 +432,24 @@ public class GameManager : Singleton<GameManager>
             }
 
             // Change side when sphere locate near bounds
-            if (currentSpherePosOnGrid.x + 1 == density.x)
+            if (currentSpherePosOnGrid.y == density.x - 1 && currentSphereMoveSide == MoveSide.Right)
             {
                 sphereMoveSide[i] = MoveSide.Left;
             }
-            else if (currentSpherePosOnGrid.x == 0)
+            else if (currentSpherePosOnGrid.y == 0 && currentSphereMoveSide == MoveSide.Left)
             {
                 sphereMoveSide[i] = MoveSide.Right;
             }
 
-            if (currentSpherePosOnGrid.y + 1 == density.y)
+            if (currentSpherePosOnGrid.x == density.y - 1 && currentSphereMoveSide == MoveSide.Up)
             {
                 sphereMoveSide[i] = MoveSide.Down;
             }
-            else if (currentSpherePosOnGrid.x == 0)
+            else if (currentSpherePosOnGrid.x == 0 && currentSphereMoveSide == MoveSide.Down)
             {
                 sphereMoveSide[i] = MoveSide.Up;
             }
+
         }
 
     }
@@ -456,21 +457,41 @@ public class GameManager : Singleton<GameManager>
     private void SwipeUp()
     {
         playerMoveSide = MoveSide.Up;
+
+        if (playerPosOnGrid.x == density.y - 1 && playerMoveSide == MoveSide.Up)
+        {
+            playerMoveSide = MoveSide.Down;
+        }
     }
 
     private void SwipeDown()
     {
         playerMoveSide = MoveSide.Down;
+
+        if (playerPosOnGrid.x == 0 && playerMoveSide == MoveSide.Down)
+        {
+            playerMoveSide = MoveSide.Up;
+        }
     }
 
     private void SwipeLeft()
     {
         playerMoveSide = MoveSide.Left;
+
+        if (playerPosOnGrid.y == 0 && playerMoveSide == MoveSide.Left)
+        {
+            playerMoveSide = MoveSide.Right;
+        }
     }
 
     private void SwipeRight()
     {
         playerMoveSide = MoveSide.Right;
+
+        if (playerPosOnGrid.y == density.x - 1 && playerMoveSide == MoveSide.Right)
+        {
+            playerMoveSide = MoveSide.Left;
+        }
     }
 
     private void Tap()

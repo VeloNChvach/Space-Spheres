@@ -4,120 +4,89 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     private void Start()
     {
         GameManager.Instance.PlayerGo += PlayerGo;
     }
 
-    private void PlayerGo(GameManager.MoveSide moveSide, bool swap, float timeToMove)
+    private void PlayerGo(GameManager.MoveSide moveSide, bool swap)
     {
-        Debug.Log(moveSide);
-
-        //StartCoroutine(MoveTo(moveSide, swap, timeToMove));
-        CalculateMove(moveSide, swap, timeToMove);
+        StartCoroutine(MoveTo(moveSide, swap));
     }
 
-    private IEnumerator MoveTo(GameManager.MoveSide moveSide, bool swap, float timeToMove)
+    private IEnumerator MoveTo(GameManager.MoveSide moveSide, bool swap)
     {
         Vector3 startPosition = transform.position;
         Vector3 spherePosition = Vector3.zero;
-        Vector3 pointPosition;
+        Vector3 pointPosition = Vector3.zero;
+
+        float alpha = 0;
+        float beta = -90;
 
         if (moveSide == GameManager.MoveSide.Up)
         {
-            spherePosition = new Vector3(startPosition.x, startPosition.y, startPosition.z + GameManager.Instance.stepBetweenGround.y);
+            spherePosition = new Vector3(startPosition.x, transform.localScale.y / 2, startPosition.z + GameManager.Instance.stepBetweenGround.y);
+            GameManager.Instance.playerPosOnGrid.x += 2;
         }
         else if (moveSide == GameManager.MoveSide.Down)
         {
-            spherePosition = new Vector3(startPosition.x, startPosition.y, startPosition.z - GameManager.Instance.stepBetweenGround.y);
+            spherePosition = new Vector3(startPosition.x, transform.localScale.y / 2, startPosition.z - GameManager.Instance.stepBetweenGround.y);
+            GameManager.Instance.playerPosOnGrid.x -= 2;
         }
         else if (moveSide == GameManager.MoveSide.Right)
         {
-            spherePosition = new Vector3(startPosition.x + GameManager.Instance.stepBetweenGround.x, startPosition.y, startPosition.z);
+            spherePosition = new Vector3(startPosition.x + GameManager.Instance.stepBetweenGround.x, transform.localScale.y / 2, startPosition.z);
+            alpha = 90;
+            GameManager.Instance.playerPosOnGrid.y += 2;
         }
         else if (moveSide == GameManager.MoveSide.Left)
         {
-            spherePosition = new Vector3(startPosition.x - GameManager.Instance.stepBetweenGround.x, startPosition.y, startPosition.z);
+            spherePosition = new Vector3(startPosition.x - GameManager.Instance.stepBetweenGround.x, transform.localScale.y / 2, startPosition.z);
+            alpha = 90;
+            GameManager.Instance.playerPosOnGrid.y -= 2;
         }
 
-        float alpha = 0, beta = 0;
-        float alphaRad, betaRad;
+        
+        float alphaRad = 0, betaRad = 0;
         float radius = GameManager.Instance.stepBetweenGround.x;
 
         float progress = 0;
+        float speed = 3f;
 
-        //        while (progress < timeToMove)
         while (progress < 1)
         {
-            yield return null;
+            yield return new WaitForFixedUpdate();
 
-            //alpha = 180 * progress;
-            beta = 180 * progress;
+            if (moveSide == GameManager.MoveSide.Up)
+            {
+                alpha = 180 * progress;
+                alphaRad = Mathf.Deg2Rad * (180 + alpha);
+                if (alpha > 170) alphaRad = Mathf.Deg2Rad * (360);
+                betaRad = Mathf.Deg2Rad * beta;
+            }
+            else if (moveSide == GameManager.MoveSide.Down)
+            {
+                alpha = 180 * progress;
+                alphaRad = Mathf.Deg2Rad * (-alpha);
+                if (alpha > 170) alphaRad = Mathf.Deg2Rad * (-180);
+                betaRad = Mathf.Deg2Rad * beta;
+            }
+            else if (moveSide == GameManager.MoveSide.Left)
+            {
+                beta = 180 * progress;
+                alphaRad = Mathf.Deg2Rad * (alpha);
+                betaRad = Mathf.Deg2Rad * (beta);
+                if (beta > 170) betaRad = Mathf.Deg2Rad * (180);
+            }
+            else if (moveSide == GameManager.MoveSide.Right)
+            {
+                beta = 180 * progress;
+                alphaRad = Mathf.Deg2Rad * (alpha);
+                betaRad = Mathf.Deg2Rad * (180 - beta);
+                if (beta > 170) betaRad = Mathf.Deg2Rad * (0);
+            }
 
-
-            alphaRad = Mathf.Deg2Rad * (90 - alpha);
-            betaRad = Mathf.Deg2Rad * (180 - beta);
-
-            pointPosition.x = spherePosition.x + radius * Mathf.Sin(alphaRad) * Mathf.Cos(betaRad);
-            pointPosition.y = spherePosition.y + radius * Mathf.Sin(alphaRad) * Mathf.Sin(betaRad);
-            pointPosition.z = spherePosition.z + radius * Mathf.Cos(alphaRad);
-
-            transform.position = pointPosition;
-
-            //transform.position = Vector3.RotateTowards(startPosition, spherePosition, alpha, radius);
-
-            progress += Time.deltaTime;
-        }
-    }
-
-
-    bool isMoving = false;
-    [Range(0, 1)] public float progress;
-    private Vector3 pointPosition;
-    Vector3 spherePosition = Vector3.zero;
-
-
-    private void CalculateMove(GameManager.MoveSide moveSide, bool swap, float timeToMove)
-    {
-        Vector3 startPosition = transform.position;
-        spherePosition = Vector3.zero;
-
-        if (moveSide == GameManager.MoveSide.Up)
-        {
-            spherePosition = new Vector3(startPosition.x, startPosition.y, startPosition.z + GameManager.Instance.stepBetweenGround.y);
-        }
-        else if (moveSide == GameManager.MoveSide.Down)
-        {
-            spherePosition = new Vector3(startPosition.x, startPosition.y, startPosition.z - GameManager.Instance.stepBetweenGround.y);
-        }
-        else if (moveSide == GameManager.MoveSide.Right)
-        {
-            spherePosition = new Vector3(startPosition.x + GameManager.Instance.stepBetweenGround.x, startPosition.y, startPosition.z);
-        }
-        else if (moveSide == GameManager.MoveSide.Left)
-        {
-            spherePosition = new Vector3(startPosition.x - GameManager.Instance.stepBetweenGround.x, startPosition.y, startPosition.z);
-        }
-
-        isMoving = true;
-        progress = 0;
-    }
-
-    float alpha = 0, beta = 0;
-    float alphaRad, betaRad;
-    float radius = GameManager.Instance.stepBetweenGround.x;
-
-    private void Update()
-    {
-        if (!isMoving)
-            return;
-
-            //alpha = 180 * progress;
-            beta = 180 * progress;
-
-            alphaRad = Mathf.Deg2Rad * (90 - alpha);
-            betaRad = Mathf.Deg2Rad * (180 - beta);
+            //Debug.Log(alpha + " " + beta);
 
             pointPosition.x = spherePosition.x + radius * Mathf.Sin(alphaRad) * Mathf.Cos(betaRad);
             pointPosition.y = spherePosition.y + radius * Mathf.Sin(alphaRad) * Mathf.Sin(betaRad);
@@ -125,5 +94,9 @@ public class PlayerController : MonoBehaviour
 
             transform.position = pointPosition;
 
+            progress += Time.fixedDeltaTime * speed;
+        }
     }
+
+
 }
