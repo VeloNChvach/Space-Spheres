@@ -37,12 +37,12 @@ public class GameManager : Singleton<GameManager>
     private float localSizeGroundCoef = 1.1f;
     private float heightGroundPrefab = 0.1f;
     // Player
-    private Transform player;
+    [HideInInspector] public Transform player;
     private MoveSide playerMoveSide;
     private bool playerSwap;
     private Colors playerColor;
     // Spheres
-    private List<Transform> sphereList;
+    [HideInInspector] public List<Transform> sphereList;
     private List<MoveSide> sphereMoveSide;
     private List<bool> sphereSwap;
     private List<Colors> sphereColor;
@@ -122,9 +122,6 @@ public class GameManager : Singleton<GameManager>
             
         }
 
-
-        
-
     }
 
     private void CreateLevel(Vector2 _density, int nSphere, int nColors)
@@ -183,20 +180,19 @@ public class GameManager : Singleton<GameManager>
         player.localScale.y / 2,
         pathGrid[(int)(playerPosOnGrid.x), (int)(playerPosOnGrid.y)].y);
         MeshRenderer meshRendererPlayer = player.GetComponent<MeshRenderer>();
-        meshRendererPlayer.material = sphereMaterials[0];
+        meshRendererPlayer.material.color = GetColor(0);
         playerMoveSide = MoveSide.Down;
         playerColor = Colors.Blue;
         player.gameObject.AddComponent<PlayerController>();
-        player.gameObject.AddComponent<SphereController>().enabled = false;
 
         for (int i = 0; i < nSphere - 1; i++)
         {
             Transform sphere = Instantiate(spherePrefab, sphereContainer);
             Vector2 randomPos = RandomPosition(density, ObjForRandom.Sphere);
-            float sphereHeightAboveGround = sphere.localScale.y / 2 * -1;
+            float sphereHeightAboveGround = sphere.localScale.y / 2 * - 1;
             sphere.position = new Vector3(pathGrid[(int)(randomPos.x), (int)(randomPos.y)].x, sphereHeightAboveGround, pathGrid[(int)(randomPos.x), (int)(randomPos.y)].y);
             MeshRenderer meshRendererSphere = sphere.GetComponent<MeshRenderer>();
-            meshRendererSphere.material = sphereMaterials[i+1];
+            meshRendererSphere.material.color = GetColor(i + 1);
             sphereList.Add(sphere);
             spherePosOnGrid.Add(randomPos);
             sphereMoveSide.Add(GetRandomMoveSide());
@@ -211,8 +207,33 @@ public class GameManager : Singleton<GameManager>
             if (i == 3)
                 sphereColor.Add(Colors.Orange);
             sphere.gameObject.AddComponent<SphereController>();
-            sphere.gameObject.AddComponent<PlayerController>().enabled = false;
         }
+    }
+
+    private Color GetColor(int _color)
+    {
+        float red = 0f, green = 0f, blue = 0f;
+
+        if (_color == 0)
+        {
+            red = 0f;
+            green = 0f;
+            blue = 1f;
+        }
+        else if (_color == 1)
+        {
+            red = 1f;
+            green = 0f;
+            blue = 0f;
+        }
+        else if (_color == 2)
+        {
+            red = 0f;
+            green = 1f;
+            blue = 0f;
+        }
+
+        return new Color(red, green, blue);
     }
 
     private MoveSide GetRandomMoveSide()
@@ -285,13 +306,13 @@ public class GameManager : Singleton<GameManager>
             
             if (obj == ObjForRandom.Player)
             {
-                rndX = UnityEngine.Random.Range((int)0, ((int)density.x - 1) / 2) * 2;
-                rndY = UnityEngine.Random.Range((int)0, ((int)density.y - 1) / 2) * 2;
+                rndX = UnityEngine.Random.Range((int)1, ((int)density.x - 1) / 2 - 1) * 2;
+                rndY = UnityEngine.Random.Range((int)1, ((int)density.y - 1) / 2 - 1) * 2;
             }
             else if (obj == ObjForRandom.Sphere)
             {
-                rndX = UnityEngine.Random.Range((int)0, ((int)density.x - 1) / 2) * 2 + 1;
-                rndY = UnityEngine.Random.Range((int)0, ((int)density.y - 1) / 2) * 2 + 1;
+                rndX = UnityEngine.Random.Range((int)2, ((int)density.x - 1) / 2) * 2 - 1;
+                rndY = UnityEngine.Random.Range((int)2, ((int)density.y - 1) / 2) * 2 - 1;
                 newPosition = new Vector2(rndY, rndX);
 
                 for (int i = 0; i < spherePosOnGrid.Count; i++)
@@ -348,11 +369,11 @@ public class GameManager : Singleton<GameManager>
             playerMoveSide = MoveSide.Up;
         }
 
+        Debug.Log(playerPosOnGrid + " " + density);
+
         // Calculate for player and spheres
         for (int i = 0; i < spherePosOnGrid.Count; i++)
         {
-            Debug.Log(spherePosOnGrid[i] + "s = p" + playerPosOnGrid);
-
             // Check to swap with player
             if (playerMoveSide == MoveSide.Right &&
                 sphereMoveSide[i] == MoveSide.Up &&
@@ -386,11 +407,45 @@ public class GameManager : Singleton<GameManager>
                 sphereSwap[i] = true;
                 playerSwap = true;
             }
+            else if (playerMoveSide == MoveSide.Up &&
+                sphereMoveSide[i] == MoveSide.Right &&
+                spherePosOnGrid[i].x - 1 == playerPosOnGrid.x &&
+                spherePosOnGrid[i].y + 1 == playerPosOnGrid.y)
+            {
+                sphereSwap[i] = true;
+                playerSwap = true;
+            }
+            else if (playerMoveSide == MoveSide.Up &&
+                sphereMoveSide[i] == MoveSide.Left &&
+                spherePosOnGrid[i].x - 1 == playerPosOnGrid.x &&
+                spherePosOnGrid[i].y - 1 == playerPosOnGrid.y)
+            {
+                sphereSwap[i] = true;
+                playerSwap = true;
+            }
+            else if (playerMoveSide == MoveSide.Down &&
+                sphereMoveSide[i] == MoveSide.Right &&
+                spherePosOnGrid[i].x + 1 == playerPosOnGrid.x &&
+                spherePosOnGrid[i].y + 1 == playerPosOnGrid.y)
+            {
+                sphereSwap[i] = true;
+                playerSwap = true;
+            }
+            else if (playerMoveSide == MoveSide.Down &&
+                sphereMoveSide[i] == MoveSide.Left &&
+                spherePosOnGrid[i].x + 1 == playerPosOnGrid.x &&
+                spherePosOnGrid[i].y - 1 == playerPosOnGrid.y)
+            {
+                sphereSwap[i] = true;
+                playerSwap = true;
+            }
             else
             {
                 playerSwap = false;
                 sphereSwap[i] = false;
             }
+
+            //Debug.Log(spherePosOnGrid[i] + "s = p" + playerPosOnGrid + ", swap: " + playerSwap);
         }
 
         // Calculate for player and colors

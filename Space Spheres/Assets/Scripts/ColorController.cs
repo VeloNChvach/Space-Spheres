@@ -8,7 +8,8 @@ public class ColorController : MonoBehaviour
 
     private void Start()
     {
-        string color = GetComponent<MeshRenderer>().material.name;
+        string color = GetComponent<MeshRenderer>().sharedMaterial.name;
+
         if (color == "ColorBlue")
         {
             currentColor = GameManager.Colors.Blue;
@@ -25,25 +26,27 @@ public class ColorController : MonoBehaviour
         {
             currentColor = GameManager.Colors.Orange;
         }
+
         //GameManager.Instance.ColorGo += ColorGo;
     }
 
-    private void ColorGo(Transform color, bool readyToDestroy)
-    {
-        //Debug.Log("ColorGo " + readyToDestroy);
-        //if (readyToDestroy && color == transform)
-        //{
-        //    readyToDestroy = true;
-        //}
-        //else
-        //{
-        //    readyToDestroy = false;
-        //}
-    }
+    //private void ColorGo(Transform color, bool readyToDestroy)
+    //{
+    //    Debug.Log("ColorGo " + readyToDestroy);
+    //    if (readyToDestroy && color == transform)
+    //    {
+    //        readyToDestroy = true;
+    //    }
+    //    else
+    //    {
+    //        readyToDestroy = false;
+    //    }
+    //}
 
     private void OnTriggerEnter(Collider other)
     {
-        if (CheckColor(other.GetComponent<MeshRenderer>().material.name))
+        
+        if (PlayerController.Instance.currentColor == currentColor)
         {
             Destroy(gameObject);
         }
@@ -51,7 +54,8 @@ public class ColorController : MonoBehaviour
 
     private bool CheckColor(string color)
     {
-        // Bad chacking
+        // Bad checking
+
         GameManager.Colors sphereColor = GameManager.Colors.Blue;
 
         if (color == "SphereBlue")

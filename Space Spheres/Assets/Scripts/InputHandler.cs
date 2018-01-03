@@ -24,7 +24,7 @@ public class InputHandler : Singleton<InputHandler>
         }
         else if (Input.GetButtonUp("Fire1"))
         {
-            if (Vector2.Distance((Vector2)Input.mousePosition, startTouchPosition) > 100)
+            if (Vector2.Distance((Vector2)Input.mousePosition, startTouchPosition) > 50)
             {
                 MovePlayer((Vector2)Input.mousePosition - startTouchPosition);
             }
