@@ -6,6 +6,7 @@ public class PlayerController : Singleton<PlayerController>
 {
     private MeshRenderer mesh;
     [HideInInspector] public GameManager.Colors currentColor;
+    private Light light;
 
     private void Awake()
     {
@@ -16,7 +17,8 @@ public class PlayerController : Singleton<PlayerController>
     {
         mesh = GetComponent<MeshRenderer>();
         currentColor = GameManager.Colors.Blue;
-
+        light = GetComponent<Light>();
+        light.color = new Color(0, 0, 1);
     }
 
     private void PlayerGo(GameManager.MoveSide moveSide, bool swap)
@@ -38,24 +40,36 @@ public class PlayerController : Singleton<PlayerController>
         if (moveSide == GameManager.MoveSide.Up)
         {
             spherePosition = new Vector3(startPosition.x, transform.localScale.y / 2, startPosition.z + GameManager.Instance.stepBetweenGround.y);
-            GameManager.Instance.playerPosOnGrid.x += 2;
+            if (!swap)
+            {
+                GameManager.Instance.playerPosOnGrid.x += 2;
+            }
         }
         else if (moveSide == GameManager.MoveSide.Down)
         {
             spherePosition = new Vector3(startPosition.x, transform.localScale.y / 2, startPosition.z - GameManager.Instance.stepBetweenGround.y);
-            GameManager.Instance.playerPosOnGrid.x -= 2;
+            if (!swap)
+            {
+                GameManager.Instance.playerPosOnGrid.x -= 2;
+            }
         }
         else if (moveSide == GameManager.MoveSide.Right)
         {
             spherePosition = new Vector3(startPosition.x + GameManager.Instance.stepBetweenGround.x, transform.localScale.y / 2, startPosition.z);
             alpha = 90;
-            GameManager.Instance.playerPosOnGrid.y += 2;
+            if (!swap)
+            {
+                GameManager.Instance.playerPosOnGrid.y += 2;
+            }
         }
         else if (moveSide == GameManager.MoveSide.Left)
         {
             spherePosition = new Vector3(startPosition.x - GameManager.Instance.stepBetweenGround.x, transform.localScale.y / 2, startPosition.z);
             alpha = 90;
-            GameManager.Instance.playerPosOnGrid.y -= 2;
+            if (!swap)
+            {
+                GameManager.Instance.playerPosOnGrid.y -= 2;
+            }
         }
 
         
@@ -124,6 +138,7 @@ public class PlayerController : Singleton<PlayerController>
                 }
 
                 mesh.material.color = new Color(red, green, blue);
+                light.color = new Color(red, green, blue);
 
                 progress += Time.fixedDeltaTime * speed;
             }

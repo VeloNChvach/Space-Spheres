@@ -12,10 +12,14 @@ public class GameManager : Singleton<GameManager>
     // Sphere
     [SerializeField] private Transform spherePrefab;
     [SerializeField] private Transform sphereContainer;
-    [SerializeField] public Material[] sphereMaterials;
+    [SerializeField] public Material sphereMaterial;
     // Color
     [SerializeField] private Transform colorContainer;
     [SerializeField] private Material[] colorMaterials;
+    // Light
+    [SerializeField] private Transform lightPrefab;
+    [SerializeField] private Transform lightGlobalPrefab;
+    [SerializeField] private Transform lightContainer;
 
     // Actions
     public event Action<Transform, MoveSide, bool, int> SphereGo;
@@ -131,6 +135,27 @@ public class GameManager : Singleton<GameManager>
         CreateGround();
         CreateSpheres(nSphere);
         CreateColors(nColors);
+        CreateLight();
+    }
+
+    private void CreateLight()
+    {
+        Transform lightUp = Instantiate(lightGlobalPrefab, new Vector3(0f, 15f, 0), Quaternion.identity, lightContainer);
+        //lightUp.GetComponent<Light>().color = new Color()
+        Transform lightDown = Instantiate(lightGlobalPrefab, new Vector3(0f, -15f, 0), Quaternion.identity, lightContainer);
+
+        //float heightAboveGround = -1f;
+
+        //for (int i = 0; i < density.y; i++)
+        //{
+        //    for (int j = 0; j < density.x; j++)
+        //    {
+        //        if (i%2 == 0 && j %2 == 0)
+        //        {
+        //            Instantiate(lightPrefab, new Vector3(pathGrid[i, j].x, heightAboveGround, pathGrid[i, j].y), Quaternion.identity, lightContainer);
+        //        }
+        //    }
+        //}
     }
 
     private void CreateGround()
@@ -369,8 +394,6 @@ public class GameManager : Singleton<GameManager>
             playerMoveSide = MoveSide.Up;
         }
 
-        Debug.Log(playerPosOnGrid + " " + density);
-
         // Calculate for player and spheres
         for (int i = 0; i < spherePosOnGrid.Count; i++)
         {
@@ -445,59 +468,7 @@ public class GameManager : Singleton<GameManager>
                 sphereSwap[i] = false;
             }
 
-            //Debug.Log(spherePosOnGrid[i] + "s = p" + playerPosOnGrid + ", swap: " + playerSwap);
         }
-
-        // Calculate for player and colors
-        //for (int i = 0; i < colorList.Count; i++)
-        //{
-        //    if (playerColor == colorColor[i])
-        //    {
-        //        if (playerMoveSide == MoveSide.Up && playerPosOnGrid.x + 2 == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        {
-        //            colorReadyToDestroy[i] = true;
-        //        }
-        //        else if (playerMoveSide == MoveSide.Down && playerPosOnGrid.x - 2 == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        {
-        //            colorReadyToDestroy[i] = true;
-        //        }
-        //        else if (playerMoveSide == MoveSide.Right && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y + 2 == colorPosOnGrid[i].y)
-        //        {
-        //            colorReadyToDestroy[i] = true;
-        //        }
-        //        else if (playerMoveSide == MoveSide.Left && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y - 2 == colorPosOnGrid[i].y)
-        //        {
-        //            colorReadyToDestroy[i] = true;
-        //        }
-        //        else
-        //        {
-        //            colorReadyToDestroy[i] = false;
-        //        }
-        //        //if (playerMoveSide == MoveSide.Up && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        //{
-        //        //    colorReadyToDestroy[i] = true;
-        //        //}
-        //        //else if (playerMoveSide == MoveSide.Down && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        //{
-        //        //    colorReadyToDestroy[i] = true;
-        //        //}
-        //        //else if (playerMoveSide == MoveSide.Right && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        //{
-        //        //    colorReadyToDestroy[i] = true;
-        //        //}
-        //        //else if (playerMoveSide == MoveSide.Left && playerPosOnGrid.x == colorPosOnGrid[i].x && playerPosOnGrid.y == colorPosOnGrid[i].y)
-        //        //{
-        //        //    colorReadyToDestroy[i] = true;
-        //        //}
-        //        //else
-        //        //{
-        //        //    colorReadyToDestroy[i] = false;
-        //        //}
-        //    }
-        //
-        //    //Debug.Log(colorColor[i] + " " + colorReadyToDestroy[i]);
-        //}
-
     }
 
     private void CalculateMovingSpheres(Transform currentSphere)
@@ -507,6 +478,8 @@ public class GameManager : Singleton<GameManager>
         Vector2 currentSpherePosOnGrid = spherePosOnGrid[mainIdx];
         MoveSide currentSphereMoveSide = sphereMoveSide[mainIdx];
         bool currentSpheresSwap = sphereSwap[mainIdx];
+
+        sphereMoveSide[mainIdx] = GetRandomMoveSide();
 
         for (int i = 0; i < spherePosOnGrid.Count; i++)
         {
@@ -535,30 +508,29 @@ public class GameManager : Singleton<GameManager>
                 }
             }
 
-            if (i == mainIdx)
-            {
-                sphereMoveSide[i] = GetRandomMoveSide();
-                // Change side when sphere locate near bounds
-                if (currentSpherePosOnGrid.y == density.x - 2 && currentSphereMoveSide == MoveSide.Right)
-                {
-                    sphereMoveSide[i] = MoveSide.Left;
-                }
-                else if (currentSpherePosOnGrid.y == 1 && currentSphereMoveSide == MoveSide.Left)
-                {
-                    sphereMoveSide[i] = MoveSide.Right;
-                }
-
-                if (currentSpherePosOnGrid.x == density.y - 2 && currentSphereMoveSide == MoveSide.Up)
-                {
-                    sphereMoveSide[i] = MoveSide.Down;
-                }
-                else if (currentSpherePosOnGrid.x == 1 && currentSphereMoveSide == MoveSide.Down)
-                {
-                    sphereMoveSide[i] = MoveSide.Up;
-                }
-            }
-
+            Debug.Log(spherePosOnGrid[i] + "s = p" + playerPosOnGrid + ", swap: " + playerSwap);
         }
+
+        
+        // Change side when sphere locate near bounds
+        if (currentSpherePosOnGrid.y == density.x - 2 && currentSphereMoveSide == MoveSide.Right)
+        {
+            sphereMoveSide[mainIdx] = MoveSide.Left;
+        }
+        else if (currentSpherePosOnGrid.y == 1 && currentSphereMoveSide == MoveSide.Left)
+        {
+            sphereMoveSide[mainIdx] = MoveSide.Right;
+        }
+
+        if (currentSpherePosOnGrid.x == density.y - 2 && currentSphereMoveSide == MoveSide.Up)
+        {
+            sphereMoveSide[mainIdx] = MoveSide.Down;
+        }
+        else if (currentSpherePosOnGrid.x == 1 && currentSphereMoveSide == MoveSide.Down)
+        {
+            sphereMoveSide[mainIdx] = MoveSide.Up;
+        }
+
 
     }
 

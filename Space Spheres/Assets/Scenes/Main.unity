@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45143282, g: 0.5007264, b: 0.571261, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -77,15 +77,17 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
-    m_PVRFiltering: 0
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
     m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
     m_PVRFilteringGaussRadiusAO: 2
-    m_PVRFilteringAtrousColorSigma: 1
-    m_PVRFilteringAtrousNormalSigma: 1
-    m_PVRFilteringAtrousPositionSigma: 1
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -107,6 +109,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    debug:
+      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &32625613
 GameObject:
@@ -163,6 +167,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1086306527}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &697807429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 697807430}
+  m_Layer: 0
+  m_Name: LightContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &697807430
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 697807429}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1086306527}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &732636066
 GameObject:
@@ -240,8 +272,8 @@ Camera:
   m_GameObject: {fileID: 996484217}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -267,7 +299,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!4 &996484222
 Transform:
   m_ObjectHideFlags: 0
@@ -303,12 +334,13 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1086306526}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.9191394, y: 2.3412871, z: -8.5847}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 32625614}
   - {fileID: 732636067}
   - {fileID: 488552163}
+  - {fileID: 697807430}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -327,7 +359,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1130590392
 Light:
   m_ObjectHideFlags: 0
@@ -435,14 +467,21 @@ MonoBehaviour:
   spherePrefab: {fileID: 4505528599666126, guid: eda592e6b7523c14e859ec974f90ac22,
     type: 2}
   sphereContainer: {fileID: 732636067}
-  sphereMaterials:
-  - {fileID: 2100000, guid: 7c8a7fe671a025341a111badc1e519ad, type: 2}
-  - {fileID: 2100000, guid: eab8f85569bb67e44bb531afdc61b522, type: 2}
-  - {fileID: 2100000, guid: 48dbd99ae3a9d714eb986fd006564fd1, type: 2}
-  - {fileID: 2100000, guid: 83e43da1449230a4cbbf45dd9185077f, type: 2}
+  sphereMaterial: {fileID: 2100000, guid: 1c129b5de8f5c564f91a24534c387254, type: 2}
   colorContainer: {fileID: 488552163}
   colorMaterials:
   - {fileID: 2100000, guid: ec6f2c3222b993e46ab87222ce636279, type: 2}
   - {fileID: 2100000, guid: fbd0ea3dfa1b42a4c90c8d6d934deff9, type: 2}
   - {fileID: 2100000, guid: ea02cd0b3d9903c4ea023382c81a42c2, type: 2}
   - {fileID: 2100000, guid: 261947e913644d94eb9cd575d9042a2e, type: 2}
+  lightPrefab: {fileID: 4001014260934176, guid: 5ed325470a643cd4fb196539e73fd891,
+    type: 2}
+  lightGlobalPrefab: {fileID: 4809714516562622, guid: af342ea7e4ec08542940175bdcab02e0,
+    type: 2}
+  lightContainer: {fileID: 697807430}
+  density: {x: 0, y: 0}
+  spherePosOnGrid: []
+  playerPosOnGrid: {x: 0, y: 0}
+  stepBetweenGround: {x: 0, y: 0}
+  player: {fileID: 0}
+  sphereList: []
