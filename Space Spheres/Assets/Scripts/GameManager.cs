@@ -96,7 +96,7 @@ public class GameManager : Singleton<GameManager>
 
     private IEnumerator PlayOneStep()
     {
-        int nStep = 200;
+        int nStep = 500;
         float timeToMove = 0.6f;
         int nColors = 2;
         
@@ -170,8 +170,10 @@ public class GameManager : Singleton<GameManager>
 
     private void CreateGround()
     {
-        float[] xRange = new float[2] { -5.2f, 5.2f };
-        float[] yRange = new float[2] { -9.5f, 9.5f };
+        float koef = 9.5f;
+        float[] xRange = new float[2] { -koef * density.x / density.y, koef * density.x / density.y };
+        float[] yRange = new float[2] { -koef, koef };
+
 
         stepBetweenGround = new Vector2
         {
@@ -554,45 +556,33 @@ public class GameManager : Singleton<GameManager>
     {
         playerMoveSide = MoveSide.Up;
 
-        if (playerPosOnGrid.x == density.y - 1 && playerMoveSide == MoveSide.Up)
-        {
-            playerMoveSide = MoveSide.Down;
-        }
+        CalculateMovingPlayer();
     }
 
     private void SwipeDown()
     {
         playerMoveSide = MoveSide.Down;
 
-        if (playerPosOnGrid.x == 0 && playerMoveSide == MoveSide.Down)
-        {
-            playerMoveSide = MoveSide.Up;
-        }
+        CalculateMovingPlayer();
     }
 
     private void SwipeLeft()
     {
         playerMoveSide = MoveSide.Left;
 
-        if (playerPosOnGrid.y == 0 && playerMoveSide == MoveSide.Left)
-        {
-            playerMoveSide = MoveSide.Right;
-        }
+        CalculateMovingPlayer();
     }
 
     private void SwipeRight()
     {
         playerMoveSide = MoveSide.Right;
 
-        if (playerPosOnGrid.y == density.x - 1 && playerMoveSide == MoveSide.Right)
-        {
-            playerMoveSide = MoveSide.Left;
-        }
+        CalculateMovingPlayer();
     }
 
     private void Tap()
     {
-        Debug.Log("Tap");
+
     }
 }
 
