@@ -8,23 +8,15 @@ public class ColorController : MonoBehaviour
 
     private void Start()
     {
-        string color = GetComponent<MeshRenderer>().sharedMaterial.name;
+        Color color = GetComponent<MeshRenderer>().material.color;
 
-        if (color == "ColorBlue")
-        {
-            currentColor = GameManager.Colors.Blue;
-        }
-        else if (color == "ColorRed")
+        if (color.r >= 0.9)
         {
             currentColor = GameManager.Colors.Red;
         }
-        else if (color == "ColorGreen")
+        else if (color.b >= 0.9)
         {
-            currentColor = GameManager.Colors.Green;
-        }
-        else if (color == "ColorOrange")
-        {
-            currentColor = GameManager.Colors.Orange;
+            currentColor = GameManager.Colors.Blue;
         }
 
         //GameManager.Instance.ColorGo += ColorGo;
@@ -46,42 +38,42 @@ public class ColorController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         
-        if (PlayerController.Instance.currentColor == currentColor)
+        if (GameManager.Instance.playerColor == currentColor)
         {
             Destroy(gameObject);
         }
     }
 
-    private bool CheckColor(string color)
-    {
-        // Bad checking
+    //private bool CheckColor(string color)
+    //{
+    //    // Bad checking
 
-        GameManager.Colors sphereColor = GameManager.Colors.Blue;
+    //    GameManager.Colors sphereColor = GameManager.Colors.Blue;
 
-        if (color == "SphereBlue")
-        {
-            sphereColor = GameManager.Colors.Blue;
-        }
-        else if (color == "SphereRed")
-        {
-            sphereColor = GameManager.Colors.Red;
-        }
-        else if (color == "SphereGreen")
-        {
-            sphereColor = GameManager.Colors.Green;
-        }
-        else if (color == "SphereOrange")
-        {
-            sphereColor = GameManager.Colors.Orange;
-        }
+    //    if (color == "SphereBlue")
+    //    {
+    //        sphereColor = GameManager.Colors.Blue;
+    //    }
+    //    else if (color == "SphereRed")
+    //    {
+    //        sphereColor = GameManager.Colors.Red;
+    //    }
+    //    else if (color == "SphereGreen")
+    //    {
+    //        sphereColor = GameManager.Colors.Green;
+    //    }
+    //    else if (color == "SphereOrange")
+    //    {
+    //        sphereColor = GameManager.Colors.Orange;
+    //    }
 
-        if (sphereColor == currentColor)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    //    if (sphereColor == currentColor)
+    //    {
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
 }

@@ -15,7 +15,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] public Material sphereMaterial;
     // Color
     [SerializeField] private Transform colorContainer;
-    [SerializeField] private Material[] colorMaterials;
+    [SerializeField] private Material colorMaterial;
     // Light
     [SerializeField] private Transform lightPrefab;
     [SerializeField] private Transform lightGlobalPrefab;
@@ -44,7 +44,7 @@ public class GameManager : Singleton<GameManager>
     [HideInInspector] public Transform player;
     private MoveSide playerMoveSide;
     private bool playerSwap;
-    private Colors playerColor;
+    [HideInInspector] public Colors playerColor;
     // Spheres
     [HideInInspector] public List<Transform> sphereList;
     private List<MoveSide> sphereMoveSide;
@@ -98,6 +98,7 @@ public class GameManager : Singleton<GameManager>
     {
         int nStep = 200;
         float timeToMove = 0.6f;
+        int nColors = 2;
         
         // Calculate moving for all spheres and player
         for (int j = 0; j < nStep; j++)
@@ -107,6 +108,7 @@ public class GameManager : Singleton<GameManager>
                 CalculateMovingSpheres(sphereList[i]);
             }
             CalculateMovingPlayer();
+            CheckColorCount(nColors);
 
             yield return new WaitForSeconds(timeToMove);
 
@@ -136,6 +138,14 @@ public class GameManager : Singleton<GameManager>
         CreateSpheres(nSphere);
         CreateColors(nColors);
         CreateLight();
+    }
+
+    private void CheckColorCount(int count)
+    {
+        if (colorContainer.childCount == 0)
+        {
+            CreateColors(count);
+        }
     }
 
     private void CreateLight()
@@ -299,19 +309,25 @@ public class GameManager : Singleton<GameManager>
             Vector2 randomPos = RandomPosition(density, ObjForRandom.Color);
             color.position = new Vector3(pathGrid[(int)(randomPos.x), (int)(randomPos.y)].x, 0f, pathGrid[(int)(randomPos.x), (int)(randomPos.y)].y);
             MeshRenderer meshRendererColor = color.GetComponent<MeshRenderer>();
-            meshRendererColor.material = colorMaterials[i];
+            meshRendererColor.material = colorMaterial;
             color.gameObject.AddComponent<BoxCollider>().isTrigger = true;
-            color.localScale = new Vector3(stepBetweenGround.x / localSizeGroundCoef, heightGroundPrefab, stepBetweenGround.y / localSizeGroundCoef);
+            color.localScale = 1.1f * new Vector3(stepBetweenGround.x / localSizeGroundCoef, heightGroundPrefab, stepBetweenGround.y / localSizeGroundCoef);
             colorList.Add(color);
             colorPosOnGrid.Add(randomPos);
             if (i == 0)
+            {
                 colorColor.Add(Colors.Blue);
-            if (i == 1)
+                meshRendererColor.material.color = new Color(0f, 0f, 1f);
+            }
+            else if (i == 1)
+            {
                 colorColor.Add(Colors.Red);
-            if (i == 2)
-                colorColor.Add(Colors.Green);
-            if (i == 3)
-                colorColor.Add(Colors.Orange);
+                meshRendererColor.material.color = new Color(1f, 0f, 0f);
+            }
+            //else if (i == 2)
+            //    colorColor.Add(Colors.Green);
+            //else if (i == 3)
+            //    colorColor.Add(Colors.Orange);
             colorReadyToDestroy.Add(false);
             color.gameObject.AddComponent<ColorController>();
             color.gameObject.AddComponent<Rigidbody>().isKinematic = true;

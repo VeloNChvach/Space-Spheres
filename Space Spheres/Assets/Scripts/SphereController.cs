@@ -41,36 +41,24 @@ public class SphereController : MonoBehaviour
             if (moveSide == GameManager.MoveSide.Up)
             {
                 spherePosition = new Vector3(startPosition.x, -transform.localScale.y / 2, startPosition.z + GameManager.Instance.stepBetweenGround.y);
-                if (!swap)
-                {
-                    GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x + 2, GameManager.Instance.spherePosOnGrid[numIntList].y);
-                }
+                GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x + 2, GameManager.Instance.spherePosOnGrid[numIntList].y);
             }
             else if (moveSide == GameManager.MoveSide.Down)
             {
                 spherePosition = new Vector3(startPosition.x, -transform.localScale.y / 2, startPosition.z - GameManager.Instance.stepBetweenGround.y);
-                if (!swap)
-                {
-                    GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x - 2, GameManager.Instance.spherePosOnGrid[numIntList].y);
-                }
+                GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x - 2, GameManager.Instance.spherePosOnGrid[numIntList].y);
             }
             else if (moveSide == GameManager.MoveSide.Right)
             {
                 spherePosition = new Vector3(startPosition.x + GameManager.Instance.stepBetweenGround.x, -transform.localScale.y / 2, startPosition.z);
                 alpha = 90;
-                if (!swap)
-                {
-                    GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x, GameManager.Instance.spherePosOnGrid[numIntList].y + 2);
-                }
+                GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x, GameManager.Instance.spherePosOnGrid[numIntList].y + 2);
             }
             else if (moveSide == GameManager.MoveSide.Left)
             {
                 spherePosition = new Vector3(startPosition.x - GameManager.Instance.stepBetweenGround.x, -transform.localScale.y / 2, startPosition.z);
                 alpha = 90;
-                if (!swap)
-                {
-                    GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x, GameManager.Instance.spherePosOnGrid[numIntList].y - 2);
-                }
+                GameManager.Instance.spherePosOnGrid[numIntList] = new Vector2(GameManager.Instance.spherePosOnGrid[numIntList].x, GameManager.Instance.spherePosOnGrid[numIntList].y - 2);
             }
 
 
@@ -80,125 +68,77 @@ public class SphereController : MonoBehaviour
             float progress = 0;
             float speed = 3f;
 
-            if (swap)
+            float red = 0, green = 0, blue = 0;
+
+            while (progress < 1)
             {
-                float red = 0, green = 0, blue = 0;
+                yield return new WaitForFixedUpdate();
 
-                while (progress < 1)
+                if (moveSide == GameManager.MoveSide.Up)
                 {
-                    yield return new WaitForFixedUpdate();
+                    alpha = 180 * progress;
+                    alphaRad = Mathf.Deg2Rad * (180 - alpha);
+                    if (alpha > 177) alphaRad = Mathf.Deg2Rad * (360);
+                    betaRad = Mathf.Deg2Rad * beta;
+                }
+                else if (moveSide == GameManager.MoveSide.Down)
+                {
+                    alpha = 180 * progress;
+                    alphaRad = Mathf.Deg2Rad * (alpha);
+                    if (alpha > 177) alphaRad = Mathf.Deg2Rad * (-180);
+                    betaRad = Mathf.Deg2Rad * beta;
+                }
+                else if (moveSide == GameManager.MoveSide.Left)
+                {
+                    beta = 180 * progress;
+                    alphaRad = Mathf.Deg2Rad * (alpha);
+                    betaRad = Mathf.Deg2Rad * (-beta);
+                    if (beta > 177) betaRad = Mathf.Deg2Rad * (180);
+                }
+                else if (moveSide == GameManager.MoveSide.Right)
+                {
+                    beta = 180 * progress;
+                    alphaRad = Mathf.Deg2Rad * (alpha);
+                    betaRad = Mathf.Deg2Rad * (180 + beta);
+                    if (beta > 177) betaRad = Mathf.Deg2Rad * (0);
+                }
 
-                    if (moveSide == GameManager.MoveSide.Up)
-                    {
-                        alpha = 360 * progress;
-                        alphaRad = Mathf.Deg2Rad * (180 - alpha);
-                        if (alpha > 355) alphaRad = Mathf.Deg2Rad * (360);
-                        betaRad = Mathf.Deg2Rad * beta;
-                    }
-                    else if (moveSide == GameManager.MoveSide.Down)
-                    {
-                        alpha = 360 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        if (alpha > 355) alphaRad = Mathf.Deg2Rad * (-180);
-                        betaRad = Mathf.Deg2Rad * beta;
-                    }
-                    else if (moveSide == GameManager.MoveSide.Left)
-                    {
-                        beta = 360 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        betaRad = Mathf.Deg2Rad * (-beta);
-                        if (beta > 355) betaRad = Mathf.Deg2Rad * (180);
-                    }
-                    else if (moveSide == GameManager.MoveSide.Right)
-                    {
-                        beta = 360 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        betaRad = Mathf.Deg2Rad * (180 + beta);
-                        if (beta > 355) betaRad = Mathf.Deg2Rad * (0);
-                    }
+                pointPosition.x = spherePosition.x + radius * Mathf.Sin(alphaRad) * Mathf.Cos(betaRad);
+                pointPosition.y = spherePosition.y + radius * Mathf.Sin(alphaRad) * Mathf.Sin(betaRad);
+                pointPosition.z = spherePosition.z + radius * Mathf.Cos(alphaRad);
 
-                    pointPosition.x = spherePosition.x + radius * Mathf.Sin(alphaRad) * Mathf.Cos(betaRad);
-                    pointPosition.y = spherePosition.y + radius * Mathf.Sin(alphaRad) * Mathf.Sin(betaRad);
-                    pointPosition.z = spherePosition.z + radius * Mathf.Cos(alphaRad);
-
-                    transform.position = pointPosition;
+                transform.position = pointPosition;
 
 
-                    if (currentColor == GameManager.Colors.Red)
-                    {
-                        red = Mathf.Lerp(1f, 0f, progress);
-                        blue = Mathf.Lerp(0f, 1f, progress);
-                        green = 0;
-                    }
-                    else if (currentColor == GameManager.Colors.Blue)
-                    {
-                        red = Mathf.Lerp(0f, 1f, progress);
-                        blue = Mathf.Lerp(1f, 0f, progress);
-                        green = 0;
-                    }
-
+                if (swap && currentColor == GameManager.Colors.Red)
+                {
+                    red = Mathf.Lerp(1f, 0f, progress);
+                    blue = Mathf.Lerp(0f, 1f, progress);
+                    green = 0;
                     mesh.material.color = new Color(red, green, blue);
                     light.color = new Color(red, green, blue);
-
-                    progress += Time.fixedDeltaTime * speed;
                 }
-
-                if (currentColor == GameManager.Colors.Blue)
+                else if (swap && currentColor == GameManager.Colors.Blue)
                 {
-                    currentColor = GameManager.Colors.Red;
-                }
-                else if (currentColor == GameManager.Colors.Red)
-                {
-                    currentColor = GameManager.Colors.Blue;
+                    red = Mathf.Lerp(0f, 1f, progress);
+                    blue = Mathf.Lerp(1f, 0f, progress);
+                    green = 0;
+                    mesh.material.color = new Color(red, green, blue);
+                    light.color = new Color(red, green, blue);
                 }
 
+                progress += Time.fixedDeltaTime * speed;
             }
-            else
+
+            if (swap && currentColor == GameManager.Colors.Blue)
             {
-                while (progress < 1)
-                {
-                    yield return new WaitForFixedUpdate();
-
-                    if (moveSide == GameManager.MoveSide.Up)
-                    {
-                        alpha = 180 * progress;
-                        alphaRad = Mathf.Deg2Rad * (180 - alpha);
-                        if (alpha > 170) alphaRad = Mathf.Deg2Rad * (360);
-                        betaRad = Mathf.Deg2Rad * beta;
-                    }
-                    else if (moveSide == GameManager.MoveSide.Down)
-                    {
-                        alpha = 180 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        if (alpha > 170) alphaRad = Mathf.Deg2Rad * (-180);
-                        betaRad = Mathf.Deg2Rad * beta;
-                    }
-                    else if (moveSide == GameManager.MoveSide.Left)
-                    {
-                        beta = 180 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        betaRad = Mathf.Deg2Rad * (-beta);
-                        if (beta > 170) betaRad = Mathf.Deg2Rad * (180);
-                    }
-                    else if (moveSide == GameManager.MoveSide.Right)
-                    {
-                        beta = 180 * progress;
-                        alphaRad = Mathf.Deg2Rad * (alpha);
-                        betaRad = Mathf.Deg2Rad * (180 + beta);
-                        if (beta > 170) betaRad = Mathf.Deg2Rad * (0);
-                    }
-
-                    pointPosition.x = spherePosition.x + radius * Mathf.Sin(alphaRad) * Mathf.Cos(betaRad);
-                    pointPosition.y = spherePosition.y + radius * Mathf.Sin(alphaRad) * Mathf.Sin(betaRad);
-                    pointPosition.z = spherePosition.z + radius * Mathf.Cos(alphaRad);
-
-                    transform.position = pointPosition;
-
-                    progress += Time.fixedDeltaTime * speed;
-                }
+                currentColor = GameManager.Colors.Red;
+            }
+            else if (swap && currentColor == GameManager.Colors.Red)
+            {
+                currentColor = GameManager.Colors.Blue;
             }
 
-            
         }
     }
 
