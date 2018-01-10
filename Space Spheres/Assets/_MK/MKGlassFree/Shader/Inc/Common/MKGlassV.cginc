@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: upgraded instancing buffer 'MK_GLASS_PROPERTIES' to new syntax.
-
-//uniform variables
+﻿//uniform variables
 #ifndef MK_GLASS_V
 	#define MK_GLASS_V
 
@@ -10,9 +8,9 @@
 
 	//enabled uniform variables only if needed
 
-	UNITY_INSTANCING_BUFFER_START(MK_GLASS_PROPERTIES)
+	UNITY_INSTANCING_CBUFFER_START(MK_GLASS_PROPERTIES)
           
-    UNITY_INSTANCING_BUFFER_END(MK_GLASS_PROPERTIES)
+    UNITY_INSTANCING_CBUFFER_END
 
 	//Main
 	#ifndef UNITY_STANDARD_INPUT_INCLUDED

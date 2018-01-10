@@ -115,7 +115,7 @@ public class PlayerController : Singleton<PlayerController>
                 green = 0;
                 mesh.material.color = new Color(red, green, blue);
                 light.color = new Color(red, green, blue);
-                Time.timeScale = 0.1f;
+                Time.timeScale = 0.2f;
             }
             else if (swap && currentColor == GameManager.Colors.Blue)
             {
