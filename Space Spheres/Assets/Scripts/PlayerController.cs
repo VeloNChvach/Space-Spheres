@@ -4,25 +4,65 @@ using UnityEngine;
 
 public class PlayerController : Singleton<PlayerController>
 {
+
+
+
+
+
     private MeshRenderer mesh;
-    [HideInInspector] public GameManager.Colors currentColor;
     private Light light;
+    private GameManager.Colors colorToChange;
+    private bool isColor = true;
+
 
     private void Awake()
     {
         GameManager.Instance.PlayerGo += PlayerGo;
+        colorToChange = GameManager.Instance.playerColor;
     }
 
     private void Start()
     {
         mesh = GetComponent<MeshRenderer>();
-        currentColor = GameManager.Colors.Blue;
         light = GetComponent<Light>();
+        mesh.material.color = new Color(0, 0, 1);
         light.color = new Color(0, 0, 1);
+
     }
 
     private void PlayerGo(GameManager.MoveSide moveSide, bool swap)
     {
+        if (isColor)
+        {
+            if (GameManager.Instance.playerColor == GameManager.Colors.Blue)
+            {
+                mesh.material.color = new Color(0, 0, 1);
+                light.color = new Color(0, 0, 1);
+            }
+            else if (GameManager.Instance.playerColor == GameManager.Colors.Red)
+            {
+                mesh.material.color = new Color(1, 0, 0);
+                light.color = new Color(1, 0, 0);
+            }
+            else if (GameManager.Instance.playerColor == GameManager.Colors.Green)
+            {
+                mesh.material.color = new Color(0, 1, 0);
+                light.color = new Color(0, 1, 0);
+            }
+
+            isColor = false;
+        }
+
+
+        for (int i = 0; i < GameManager.Instance.sphereSwap.Count; i++)
+        {
+            if (GameManager.Instance.sphereSwap[i] == true)
+            {
+                colorToChange = GameManager.Instance.sphereColor[i];
+            }
+        }
+
+
         StartCoroutine(MoveTo(moveSide, swap));
     }
 
@@ -108,7 +148,7 @@ public class PlayerController : Singleton<PlayerController>
 
             transform.position = pointPosition;
 
-            if (swap && currentColor == GameManager.Colors.Red)
+            if (swap && GameManager.Instance.playerColor == GameManager.Colors.Red && colorToChange == GameManager.Colors.Blue)
             {
                 red = Mathf.Lerp(1f, 0f, progress);
                 blue = Mathf.Lerp(0f, 1f, progress);
@@ -117,7 +157,7 @@ public class PlayerController : Singleton<PlayerController>
                 light.color = new Color(red, green, blue);
                 Time.timeScale = 0.2f;
             }
-            else if (swap && currentColor == GameManager.Colors.Blue)
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Blue && colorToChange == GameManager.Colors.Red)
             {
                 red = Mathf.Lerp(0f, 1f, progress);
                 blue = Mathf.Lerp(1f, 0f, progress);
@@ -126,21 +166,71 @@ public class PlayerController : Singleton<PlayerController>
                 light.color = new Color(red, green, blue);
                 Time.timeScale = 0.2f;
             }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Blue && colorToChange == GameManager.Colors.Green)
+            {
+                red = 0;
+                blue = Mathf.Lerp(1f, 0f, progress);
+                green = Mathf.Lerp(0f, 1f, progress);
+                mesh.material.color = new Color(red, green, blue);
+                light.color = new Color(red, green, blue);
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Red && colorToChange == GameManager.Colors.Green)
+            {
+                red = Mathf.Lerp(1f, 0f, progress);
+                blue = 0;
+                green = Mathf.Lerp(0f, 1f, progress);
+                mesh.material.color = new Color(red, green, blue);
+                light.color = new Color(red, green, blue);
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Green && colorToChange == GameManager.Colors.Blue)
+            {
+                red = 0;
+                blue = Mathf.Lerp(0f, 1f, progress);
+                green = Mathf.Lerp(1f, 0f, progress);
+                mesh.material.color = new Color(red, green, blue);
+                light.color = new Color(red, green, blue);
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Green && colorToChange == GameManager.Colors.Red)
+            {
+                red = Mathf.Lerp(0f, 1f, progress);
+                blue = 0;
+                green = Mathf.Lerp(1f, 0f, progress);
+                mesh.material.color = new Color(red, green, blue);
+                light.color = new Color(red, green, blue);
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Red && colorToChange == GameManager.Colors.Red)
+            {
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Green && colorToChange == GameManager.Colors.Green)
+            {
+                Time.timeScale = 0.2f;
+            }
+            else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Blue && colorToChange == GameManager.Colors.Blue)
+            {
+                Time.timeScale = 0.2f;
+            }
 
             progress += Time.fixedDeltaTime * speed;
         }
 
         Time.timeScale = 1f;
 
-        if (swap && currentColor == GameManager.Colors.Blue)
+        if (swap && colorToChange == GameManager.Colors.Red)
         {
-            currentColor = GameManager.Colors.Red;
-            GameManager.Instance.playerColor = currentColor;
+            GameManager.Instance.playerColor = GameManager.Colors.Red;
         }
-        else if (swap && currentColor == GameManager.Colors.Red)
+        else if (swap && colorToChange == GameManager.Colors.Blue)
         {
-            currentColor = GameManager.Colors.Blue;
-            GameManager.Instance.playerColor = currentColor;
+            GameManager.Instance.playerColor = GameManager.Colors.Blue;
+        }
+        else if (swap && colorToChange == GameManager.Colors.Green)
+        {
+            GameManager.Instance.playerColor = GameManager.Colors.Green;
         }
     }
 

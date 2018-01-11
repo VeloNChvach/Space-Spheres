@@ -478,7 +478,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: a6fbffff00000000802900008829000098290000
+    m_ExpandedIDs: 4276fcff3077fcff5479fcff4283fcff3e84fcff6286fcff3093fcff2e94fcff5296fcffbc9ffcffb0a0fcffd4a2fcff84acfcff2aadfcff54affcff3aaafdffe6aafdff08adfdfff2b5feffa2b6feffc4b8feffa6fbffff00000000262c0000382c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -533,9 +533,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -5.5125093, y: 0.46488214, z: 12.475901}
+    m_Target: {x: -1.2344887, y: 11.40538, z: -8.790721}
     speed: 2
-    m_Value: {x: -5.5125093, y: 0.46488214, z: 12.475901}
+    m_Value: {x: -1.2344887, y: 11.40538, z: -8.790721}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -558,13 +558,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.055731725, y: 0.9439724, z: -0.24185027, w: 0.21752834}
+    m_Target: {x: 0.4713199, y: 0.008211527, z: -0.004388618, w: 0.8819132}
     speed: 2
-    m_Value: {x: 0.05573173, y: 0.94397247, z: -0.24185027, w: 0.21752834}
+    m_Value: {x: 0.4713199, y: 0.008211527, z: -0.004388618, w: 0.8819132}
   m_Size:
-    m_Target: 6.518957
+    m_Target: 5.8413167
     speed: 2
-    m_Value: 6.518957
+    m_Value: 5.8413167
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -614,19 +614,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scripts
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scripts
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\Projects\Space Sphere\Space Spheres
   m_IsLocked: 1
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: c8280000
-    m_LastClickedID: 10440
-    m_ExpandedIDs: 00000000ac28000000ca9a3bffffff7f
+    m_SelectedIDs: f2280000
+    m_LastClickedID: 10482
+    m_ExpandedIDs: 00000000ba28000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -654,7 +654,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000ac280000
+    m_ExpandedIDs: 00000000ba280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

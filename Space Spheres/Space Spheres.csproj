@@ -228,12 +228,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\ColorController.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GM.cs" />
     <Compile Include="Assets\Scripts\InputHandler.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\PlayerManager.cs" />
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\SphereController.cs" />
+    <Compile Include="Assets\Scripts\SphereManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\_MK\MKGlassFree\Shader\Inc\Common\MKGlassDef.cginc" />

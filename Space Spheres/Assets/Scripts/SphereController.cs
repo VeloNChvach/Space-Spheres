@@ -5,8 +5,9 @@ using UnityEngine;
 public class SphereController : MonoBehaviour
 {
     private MeshRenderer mesh;
-    private GameManager.Colors currentColor;
     private Light light;
+    private GameManager.Colors colorToChange;
+    private bool isColor = true;
 
     private void Awake()
     {
@@ -16,13 +17,50 @@ public class SphereController : MonoBehaviour
     private void Start()
     {
         mesh = GetComponent<MeshRenderer>();
-        currentColor = GameManager.Colors.Red;
         light = GetComponent<Light>();
-        light.color = new Color(1, 0, 0);
     }
 
     private void SphereGo(Transform sphere, GameManager.MoveSide moveSide, bool swap, int numInList)
     {
+        if (gameObject.transform != sphere)
+        {
+            return;
+        }
+
+        if (isColor)
+        {
+            if (GameManager.Instance.sphereColor[numInList] == GameManager.Colors.Blue)
+            {
+                mesh.material.color = new Color(0, 0, 1);
+                light.color = new Color(0, 0, 1);
+            }
+            else if (GameManager.Instance.sphereColor[numInList] == GameManager.Colors.Red)
+            {
+                mesh.material.color = new Color(1, 0, 0);
+                light.color = new Color(1, 0, 0);
+            }
+            else if (GameManager.Instance.sphereColor[numInList] == GameManager.Colors.Green)
+            {
+                mesh.material.color = new Color(0, 1, 0);
+                light.color = new Color(0, 1, 0);
+            }
+
+            isColor = false;
+        }
+
+        if (swap && GameManager.Instance.playerColor == GameManager.Colors.Blue)
+        {
+            colorToChange = GameManager.Colors.Blue;
+        }
+        else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Red)
+        {
+            colorToChange = GameManager.Colors.Red;
+        }
+        else if (swap && GameManager.Instance.playerColor == GameManager.Colors.Green)
+        {
+            colorToChange = GameManager.Colors.Green;
+        }
+
         GameManager.Instance.sphereList[numInList] = transform;
         StartCoroutine(MoveTo(sphere, moveSide, swap, numInList));
     }
@@ -110,7 +148,7 @@ public class SphereController : MonoBehaviour
                 transform.position = pointPosition;
 
 
-                if (swap && currentColor == GameManager.Colors.Red)
+                if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Red && colorToChange == GameManager.Colors.Blue)
                 {
                     red = Mathf.Lerp(1f, 0f, progress);
                     blue = Mathf.Lerp(0f, 1f, progress);
@@ -118,7 +156,7 @@ public class SphereController : MonoBehaviour
                     mesh.material.color = new Color(red, green, blue);
                     light.color = new Color(red, green, blue);
                 }
-                else if (swap && currentColor == GameManager.Colors.Blue)
+                else if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Blue && colorToChange == GameManager.Colors.Red)
                 {
                     red = Mathf.Lerp(0f, 1f, progress);
                     blue = Mathf.Lerp(1f, 0f, progress);
@@ -126,17 +164,53 @@ public class SphereController : MonoBehaviour
                     mesh.material.color = new Color(red, green, blue);
                     light.color = new Color(red, green, blue);
                 }
+                else if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Green && colorToChange == GameManager.Colors.Red)
+                {
+                    red = Mathf.Lerp(0f, 1f, progress);
+                    blue = 0;
+                    green = Mathf.Lerp(1f, 0f, progress);
+                    mesh.material.color = new Color(red, green, blue);
+                    light.color = new Color(red, green, blue);
+                }
+                else if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Green && colorToChange == GameManager.Colors.Blue)
+                {
+                    red = 0;
+                    blue = Mathf.Lerp(0f, 1f, progress);
+                    green = Mathf.Lerp(1f, 0f, progress);
+                    mesh.material.color = new Color(red, green, blue);
+                    light.color = new Color(red, green, blue);
+                }
+                else if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Blue && colorToChange == GameManager.Colors.Green)
+                {
+                    red = 0;
+                    blue = Mathf.Lerp(1f, 0f, progress);
+                    green = Mathf.Lerp(0f, 1f, progress);
+                    mesh.material.color = new Color(red, green, blue);
+                    light.color = new Color(red, green, blue);
+                }
+                else if (swap && GameManager.Instance.sphereColor[numIntList] == GameManager.Colors.Red && colorToChange == GameManager.Colors.Green)
+                {
+                    red = Mathf.Lerp(1f, 0f, progress);
+                    blue = 0;
+                    green = Mathf.Lerp(0f, 1f, progress);
+                    mesh.material.color = new Color(red, green, blue);
+                    light.color = new Color(red, green, blue);
+                }
 
                 progress += Time.fixedDeltaTime * speed;
             }
 
-            if (swap && currentColor == GameManager.Colors.Blue)
+            if (swap && colorToChange == GameManager.Colors.Blue)
             {
-                currentColor = GameManager.Colors.Red;
+                GameManager.Instance.sphereColor[numIntList] = GameManager.Colors.Blue;
             }
-            else if (swap && currentColor == GameManager.Colors.Red)
+            else if (swap && colorToChange == GameManager.Colors.Red)
             {
-                currentColor = GameManager.Colors.Blue;
+                GameManager.Instance.sphereColor[numIntList] = GameManager.Colors.Red;
+            }
+            else if (swap && colorToChange == GameManager.Colors.Green)
+            {
+                GameManager.Instance.sphereColor[numIntList] = GameManager.Colors.Green;
             }
 
         }

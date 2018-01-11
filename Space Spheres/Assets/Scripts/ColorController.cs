@@ -9,31 +9,26 @@ public class ColorController : MonoBehaviour
     private void Start()
     {
         Color color = GetComponent<MeshRenderer>().material.color;
+        Light colorLight = GetComponentInChildren<Light>();
 
         if (color.r >= 0.9)
         {
             currentColor = GameManager.Colors.Red;
+            colorLight.color = new Color(1f, 0f, 0f);
         }
         else if (color.b >= 0.9)
         {
             currentColor = GameManager.Colors.Blue;
+            colorLight.color = new Color(0f, 0f, 1f);
+        }
+        else if (color.g >= 0.9)
+        {
+            currentColor = GameManager.Colors.Green;
+            colorLight.color = new Color(0f, 1f, 0f);
         }
 
-        //GameManager.Instance.ColorGo += ColorGo;
-    }
 
-    //private void ColorGo(Transform color, bool readyToDestroy)
-    //{
-    //    Debug.Log("ColorGo " + readyToDestroy);
-    //    if (readyToDestroy && color == transform)
-    //    {
-    //        readyToDestroy = true;
-    //    }
-    //    else
-    //    {
-    //        readyToDestroy = false;
-    //    }
-    //}
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -44,36 +39,5 @@ public class ColorController : MonoBehaviour
         }
     }
 
-    //private bool CheckColor(string color)
-    //{
-    //    // Bad checking
-
-    //    GameManager.Colors sphereColor = GameManager.Colors.Blue;
-
-    //    if (color == "SphereBlue")
-    //    {
-    //        sphereColor = GameManager.Colors.Blue;
-    //    }
-    //    else if (color == "SphereRed")
-    //    {
-    //        sphereColor = GameManager.Colors.Red;
-    //    }
-    //    else if (color == "SphereGreen")
-    //    {
-    //        sphereColor = GameManager.Colors.Green;
-    //    }
-    //    else if (color == "SphereOrange")
-    //    {
-    //        sphereColor = GameManager.Colors.Orange;
-    //    }
-
-    //    if (sphereColor == currentColor)
-    //    {
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
+    
 }

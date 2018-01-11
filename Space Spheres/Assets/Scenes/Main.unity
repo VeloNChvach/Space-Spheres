@@ -233,6 +233,7 @@ GameObject:
   m_Component:
   - component: {fileID: 996484222}
   - component: {fileID: 996484221}
+  - component: {fileID: 996484223}
   - component: {fileID: 996484220}
   - component: {fileID: 996484219}
   - component: {fileID: 996484218}
@@ -312,6 +313,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 62, y: 0, z: 0}
+--- !u!114 &996484223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 996484217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e00e86d96bd2724694a5b855d269479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1086306526
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,8 +481,7 @@ MonoBehaviour:
   sphereContainer: {fileID: 732636067}
   sphereMaterial: {fileID: 2100000, guid: 1c129b5de8f5c564f91a24534c387254, type: 2}
   colorContainer: {fileID: 488552163}
-  colorMaterial: {fileID: 2100000, guid: bbbfac07bdd88634d8660e40b2c33a57, type: 2}
-  lightPrefab: {fileID: 4001014260934176, guid: 5ed325470a643cd4fb196539e73fd891,
+  colorPrefab: {fileID: 4585543358142692, guid: 9de4032fe389e9a47b24480f1a8f6061,
     type: 2}
   lightGlobalPrefab: {fileID: 4809714516562622, guid: af342ea7e4ec08542940175bdcab02e0,
     type: 2}
@@ -482,3 +493,5 @@ MonoBehaviour:
   player: {fileID: 0}
   playerColor: 0
   sphereList: []
+  sphereSwap: 
+  sphereColor: 

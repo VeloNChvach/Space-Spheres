@@ -59,7 +59,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distortion: 0.3
+    - _Distortion: 0
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -68,17 +68,17 @@ Material:
     - _MKEditorShowRenderBehavior: 0
     - _MKEditorShowRimBehavior: 0
     - _MKEditorShowSpecularBehavior: 0
-    - _MainTint: 0.7
+    - _MainTint: 1.5
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimIntensity: 0.3
-    - _RimSize: 2.3
-    - _Shininess: 0.275
+    - _RimIntensity: 0.299
+    - _RimSize: 1.5
+    - _Shininess: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SpecularIntensity: 0.5
+    - _SpecularIntensity: 2
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
